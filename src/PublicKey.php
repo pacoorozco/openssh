@@ -51,7 +51,7 @@ class PublicKey
      */
     public static function fromFile(string $pathToPublicKey): self
     {
-        if (!file_exists($pathToPublicKey)) {
+        if (! file_exists($pathToPublicKey)) {
             throw FileDoesNotExist::make($pathToPublicKey);
         }
 
@@ -60,7 +60,7 @@ class PublicKey
         return new static($publicKeyString);
     }
 
-    public function encrypt(string $data): bool|string
+    public function encrypt(string $data): bool | string
     {
         return $this->publicKey->encrypt($data);
     }
