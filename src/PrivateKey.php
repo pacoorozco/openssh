@@ -102,4 +102,9 @@ class PrivateKey
     {
         return $this->privateKey->getPublicKey();
     }
+
+    public function __toString(): string
+    {
+        return (string) $this->privateKey->toString('OpenSSH');
+    }
 }

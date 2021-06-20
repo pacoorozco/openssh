@@ -45,4 +45,12 @@ class PublicKeyTest extends TestCase
 
         PublicKey::fromFile('non-existing-file');
     }
+
+    /** @test */
+    public function it_will_return_a_key_in_the_proper_format(): void
+    {
+        $publicKey = PublicKey::fromFile($this->getStub('publicKey'));
+
+        $this->assertStringStartsWith('ssh-rsa', $publicKey);
+    }
 }

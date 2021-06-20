@@ -53,4 +53,12 @@ class PrivateKeyTest extends TestCase
 
         PrivateKey::fromString('invalid-key');
     }
+
+    /** @test */
+    public function it_will_return_a_key_in_the_proper_format(): void
+    {
+        $publicKey = PrivateKey::fromFile($this->getStub('privateKey'));
+
+        $this->assertStringStartsWith('-----BEGIN OPENSSH PRIVATE KEY-----', $publicKey);
+    }
 }
