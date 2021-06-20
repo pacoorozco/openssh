@@ -54,7 +54,7 @@ class PrivateKey
      */
     public static function fromFile(string $pathToPrivateKey): self
     {
-        if (!file_exists($pathToPrivateKey)) {
+        if (! file_exists($pathToPrivateKey)) {
             throw FileDoesNotExist::make($pathToPrivateKey);
         }
 
@@ -98,7 +98,8 @@ class PrivateKey
         return $this->privateKey->sign($data);
     }
 
-    public function getPublicKey(): RSA\PublicKey {
+    public function getPublicKey(): RSA\PublicKey
+    {
         return $this->privateKey->getPublicKey();
     }
 }

@@ -15,7 +15,6 @@
  *  @link        https://github.com/pacoorozco/ssham
  */
 
-
 namespace PacoOrozco\OpenSSH\Tests;
 
 use PacoOrozco\OpenSSH\Exceptions\FileDoesNotExist;
@@ -47,5 +46,3 @@ class PublicKeyTest extends TestCase
         PublicKey::fromFile('non-existing-file');
     }
 }
-
-

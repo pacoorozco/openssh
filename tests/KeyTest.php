@@ -54,7 +54,6 @@ class KeyTest extends TestCase
 
         $this->assertTrue($this->publicKey->verify('my message', $signature));
         $this->assertFalse($this->publicKey->verify('my modified message', $signature));
-        $this->assertFalse($this->publicKey->verify('my message', $signature . '- making the signature invalid'));
+        $this->assertFalse($this->publicKey->verify('my message', $signature.'- making the signature invalid'));
     }
 }
-
