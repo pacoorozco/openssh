@@ -53,5 +53,3 @@ class KeyPairTest extends TestCase
         $this->assertStringStartsWith('ssh-rsa', file_get_contents($publicKeyPath));
     }
 }
-
-

@@ -54,4 +54,3 @@ class PrivateKeyTest extends TestCase
         PrivateKey::fromString('invalid-key');
     }
 }
-
