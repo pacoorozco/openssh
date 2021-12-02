@@ -60,7 +60,7 @@ class PublicKey
         return new static($publicKeyString);
     }
 
-    public function encrypt(string $data): bool | string
+    public function encrypt(string $data): bool|string
     {
         return $this->publicKey->encrypt($data);
     }
