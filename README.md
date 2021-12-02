@@ -108,6 +108,30 @@ $publicKey->verify('my message', $signature) // returns true;
 $publicKey->verify('my modified message', $signature) // returns false;
 ```
 
+### Validating inputs (Laravel)
+
+You can use this library to validate form inputs. 
+
+To validate if an input is a valid public or private key you can use:
+```php
+use PacoOrozco\OpenSSH\Rules\PublicKeyRule;
+
+[...]
+
+    public function rules(): array
+    {
+        return [
+            'public_key' => [
+                new PublicKeyRule(),
+            ],
+            'private_key' => [
+                new PrivateKeyRule(),
+            ],
+        ];
+    }
+}
+```
+
 ## Testing
 
 ``` bash
