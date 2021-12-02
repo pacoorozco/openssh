@@ -20,10 +20,10 @@
     "prefer-stable": true,
     "require": {
         "php": "^8.0",
-        "phpseclib/phpseclib": "^3.0.9"
+        "phpseclib/phpseclib": "^3.0.12"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5.4"
+        "phpunit/phpunit": "^9.5.10"
     },
     "autoload": {
         "psr-4": {
