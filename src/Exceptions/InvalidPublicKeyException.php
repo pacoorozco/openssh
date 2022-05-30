@@ -19,10 +19,10 @@ namespace PacoOrozco\OpenSSH\Exceptions;
 
 use Exception;
 
-class InvalidPrivateKey extends Exception
+class InvalidPublicKeyException extends Exception
 {
     public static function make(): self
     {
-        return new self('This does not seem to be a valid private key.');
+        return new self('This does not seem to be a valid public key.');
     }
 }

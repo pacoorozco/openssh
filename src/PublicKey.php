@@ -1,44 +1,31 @@
 <?php
-/*
- * SSH Access Manager - SSH keys management solution.
- *
- * Copyright (c) 2017 - 2021 by Paco Orozco <paco@pacoorozco.info>
- *
- *  This file is part of some open source application.
- *
- *  Licensed under GNU General Public License 3.0.
- *  Some rights reserved. See LICENSE, AUTHORS.
- *
- *  @author      Paco Orozco <paco@pacoorozco.info>
- *  @copyright   2017 - 2021 Paco Orozco
- *  @license     GPL-3.0 <http://spdx.org/licenses/GPL-3.0>
- *  @link        https://github.com/pacoorozco/ssham
- */
 
 namespace PacoOrozco\OpenSSH;
 
-use PacoOrozco\OpenSSH\Exceptions\FileDoesNotExist;
-use PacoOrozco\OpenSSH\Exceptions\InvalidPublicKey;
+use PacoOrozco\OpenSSH\Exceptions\FileNotFoundException;
+use PacoOrozco\OpenSSH\Exceptions\NoKeyLoadedException;
 use phpseclib3\Crypt\RSA;
 
 class PublicKey
 {
-    protected RSA\PublicKey $publicKey;
+    const KEY_OUTPUT_FORMAT = 'OpenSSH';
+
+    protected \phpseclib3\Crypt\Common\PublicKey $key;
 
     /**
-     * @throws \PacoOrozco\OpenSSH\Exceptions\InvalidPublicKey
+     * @throws \PacoOrozco\OpenSSH\Exceptions\NoKeyLoadedException
      */
-    public function __construct(string $publicKeyString)
+    public function __construct(string $keyContent)
     {
         try {
-            $this->publicKey = RSA::loadFormat('OpenSSH', $publicKeyString);
-        } catch (\Throwable) {
-            throw InvalidPublicKey::make();
+            $this->key = RSA::loadPublicKey($keyContent);
+        } catch (\Throwable $exception) {
+            throw new NoKeyLoadedException($exception->getMessage());
         }
     }
 
     /**
-     * @throws \PacoOrozco\OpenSSH\Exceptions\InvalidPublicKey
+     * @throws \PacoOrozco\OpenSSH\Exceptions\NoKeyLoadedException
      */
     public static function fromString(string $publicKeyString): self
     {
@@ -46,37 +33,46 @@ class PublicKey
     }
 
     /**
-     * @throws \PacoOrozco\OpenSSH\Exceptions\InvalidPublicKey
-     * @throws \PacoOrozco\OpenSSH\Exceptions\FileDoesNotExist
+     * @throws \PacoOrozco\OpenSSH\Exceptions\FileNotFoundException
+     * @throws \PacoOrozco\OpenSSH\Exceptions\NoKeyLoadedException
      */
-    public static function fromFile(string $pathToPublicKey): self
+    public static function fromFile(string $filename): self
     {
-        if (! file_exists($pathToPublicKey)) {
-            throw FileDoesNotExist::make($pathToPublicKey);
+        if (!$keyContent = file_get_contents($filename)) {
+            throw new FileNotFoundException('The file was not found: ' . $filename);
         }
 
-        $publicKeyString = file_get_contents($pathToPublicKey);
-
-        return new static($publicKeyString);
+        return new static($keyContent);
     }
 
-    public function encrypt(string $data): bool|string
+    public function encrypt(string $plaintext): string
     {
-        return $this->publicKey->encrypt($data);
+        return $this->key->encrypt($plaintext);
     }
 
-    public function verify(string $data, string $signature): bool
+    public function verify(string $text, string $signature): bool
     {
-        return $this->publicKey->verify($data, $signature);
+        return $this->key->verify($text, $signature);
     }
 
-    public function getFingerPrint(string $algorithm = 'md5'): string
+    /**
+     * Obtain the public key fingerprints.
+     *
+     * Supported values for $algorithm are 'sha256' and 'md5'.
+     * The value returned by this function is identical to what you'd get by running ssh-keygen -lf key.pub
+     * on the command line.
+     *
+     * @param  string  $algorithm
+     *
+     * @return string
+     */
+    public function getFingerPrint(string $algorithm): string
     {
-        return $this->publicKey->getFingerprint($algorithm);
+        return $this->key->getFingerprint($algorithm);
     }
 
     public function __toString(): string
     {
-        return (string) $this->publicKey->toString('OpenSSH');
+        return $this->key->toString(self::KEY_OUTPUT_FORMAT);
     }
 }

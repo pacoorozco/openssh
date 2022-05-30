@@ -20,7 +20,7 @@ namespace PacoOrozco\OpenSSH\Rules;
 
 use App\Libs\RsaSshKey\RsaSshKey;
 use Illuminate\Contracts\Validation\Rule;
-use PacoOrozco\OpenSSH\Exceptions\InvalidPublicKey;
+use PacoOrozco\OpenSSH\Exceptions\InvalidPublicKeyException;
 use PacoOrozco\OpenSSH\PublicKey;
 
 class PublicKeyRule implements Rule
@@ -29,7 +29,7 @@ class PublicKeyRule implements Rule
     {
         try {
             PublicKey::fromString($value);
-        } catch (InvalidPublicKey) {
+        } catch (InvalidPublicKeyException) {
             return false;
         }
 

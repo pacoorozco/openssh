@@ -19,7 +19,7 @@
 namespace PacoOrozco\OpenSSH\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use PacoOrozco\OpenSSH\Exceptions\InvalidPrivateKey;
+use PacoOrozco\OpenSSH\Exceptions\InvalidPrivateKeyException;
 use PacoOrozco\OpenSSH\PrivateKey;
 
 class PrivateKeyRule implements Rule
@@ -28,7 +28,7 @@ class PrivateKeyRule implements Rule
     {
         try {
             PrivateKey::fromString($value);
-        } catch (InvalidPrivateKey) {
+        } catch (InvalidPrivateKeyException) {
             return false;
         }
 

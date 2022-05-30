@@ -1,78 +1,61 @@
 <?php
-/*
- * SSH Access Manager - SSH keys management solution.
- *
- * Copyright (c) 2017 - 2021 by Paco Orozco <paco@pacoorozco.info>
- *
- *  This file is part of some open source application.
- *
- *  Licensed under GNU General Public License 3.0.
- *  Some rights reserved. See LICENSE, AUTHORS.
- *
- *  @author      Paco Orozco <paco@pacoorozco.info>
- *  @copyright   2017 - 2021 Paco Orozco
- *  @license     GPL-3.0 <http://spdx.org/licenses/GPL-3.0>
- *  @link        https://github.com/pacoorozco/ssham
- */
 
 namespace PacoOrozco\OpenSSH;
 
-use PacoOrozco\OpenSSH\Exceptions\CouldNotDecryptData;
-use PacoOrozco\OpenSSH\Exceptions\FileDoesNotExist;
-use PacoOrozco\OpenSSH\Exceptions\InvalidPrivateKey;
-use phpseclib3\Crypt\PublicKeyLoader;
+use PacoOrozco\OpenSSH\Exceptions\BadDecryptionException;
+use PacoOrozco\OpenSSH\Exceptions\FileNotFoundException;
+use PacoOrozco\OpenSSH\Exceptions\NoKeyLoadedException;
 use phpseclib3\Crypt\RSA;
 
 class PrivateKey
 {
-    /** @var \phpseclib3\Crypt\RSA\PrivateKey */
-    protected RSA\PrivateKey $privateKey;
+    const KEY_OUTPUT_FORMAT = 'OpenSSH';
+
+    protected \phpseclib3\Crypt\Common\PrivateKey $key;
 
     /**
-     * @throws \PacoOrozco\OpenSSH\Exceptions\InvalidPrivateKey
+     * @throws \PacoOrozco\OpenSSH\Exceptions\NoKeyLoadedException
      */
-    public function __construct(string $privateKeyString)
+    public function __construct(string $keyContent)
     {
         try {
-            $this->privateKey = RSA::loadFormat('OpenSSH', $privateKeyString);
-        } catch (\Throwable) {
-            throw InvalidPrivateKey::make();
+            $this->key = RSA::loadPrivateKey($keyContent);
+        } catch (\Throwable $exception) {
+            throw new NoKeyLoadedException($exception->getMessage());
         }
     }
 
     /**
-     * @throws \PacoOrozco\OpenSSH\Exceptions\InvalidPrivateKey
+     * @throws \PacoOrozco\OpenSSH\Exceptions\NoKeyLoadedException
      */
-    public static function fromString(string $privateKeyString): self
+    public static function fromString(string $keyContent): self
     {
-        return new static($privateKeyString);
+        return new static($keyContent);
     }
 
     /**
-     * @throws \PacoOrozco\OpenSSH\Exceptions\InvalidPrivateKey
-     * @throws \PacoOrozco\OpenSSH\Exceptions\FileDoesNotExist
+     * @throws \PacoOrozco\OpenSSH\Exceptions\NoKeyLoadedException
+     * @throws \PacoOrozco\OpenSSH\Exceptions\FileNotFoundException
      */
-    public static function fromFile(string $pathToPrivateKey): self
+    public static function fromFile(string $filename): self
     {
-        if (! file_exists($pathToPrivateKey)) {
-            throw FileDoesNotExist::make($pathToPrivateKey);
+        if (!$keyContent = file_get_contents($filename)) {
+            throw new FileNotFoundException('The file was not found: ' . $filename);
         }
 
-        $privateKeyString = file_get_contents($pathToPrivateKey);
-
-        return new static($privateKeyString);
+        return new static($keyContent);
     }
 
-    public function encrypt(string $data): string
+    public function encrypt(string $text): string
     {
-        return $this->privateKey->getPublicKey()->encrypt($data);
+        return $this->key->getPublicKey()->encrypt($text);
     }
 
-    public function canDecrypt(string $data): bool
+    public function canDecrypt(string $ciphertext): bool
     {
         try {
-            $this->decrypt($data);
-        } catch (CouldNotDecryptData) {
+            $this->decrypt($ciphertext);
+        } catch (BadDecryptionException) {
             return false;
         }
 
@@ -80,31 +63,31 @@ class PrivateKey
     }
 
     /**
-     * @throws \PacoOrozco\OpenSSH\Exceptions\CouldNotDecryptData
+     * @throws \PacoOrozco\OpenSSH\Exceptions\BadDecryptionException
      */
-    public function decrypt(string $data): string
+    public function decrypt(string $ciphertext): string
     {
-        $decrypted = $this->privateKey->decrypt($data);
+        $decrypted = $this->key->decrypt($ciphertext);
 
         if (is_null($decrypted)) {
-            throw CouldNotDecryptData::make();
+            throw new BadDecryptionException();
         }
 
         return $decrypted;
     }
 
-    public function sign(string $data): string
+    public function sign(string $text): string
     {
-        return $this->privateKey->sign($data);
+        return $this->key->sign($text);
     }
 
     public function getPublicKey(): RSA\PublicKey
     {
-        return $this->privateKey->getPublicKey();
+        return $this->key->getPublicKey();
     }
 
     public function __toString(): string
     {
-        return (string) $this->privateKey->toString('OpenSSH');
+        return $this->key->toString(self::KEY_OUTPUT_FORMAT);
     }
 }
