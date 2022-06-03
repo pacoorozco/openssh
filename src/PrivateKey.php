@@ -91,6 +91,11 @@ class PrivateKey
         return PublicKey::fromString($this->key->getPublicKey());
     }
 
+    public function toFile(string $filename): bool
+    {
+        return (false !== file_put_contents($filename, $this));
+    }
+
     public function __toString(): string
     {
         return $this->key->toString(self::KEY_OUTPUT_FORMAT);

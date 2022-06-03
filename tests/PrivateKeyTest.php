@@ -53,6 +53,24 @@ class PrivateKeyTest extends TestCase
     }
 
     /** @test */
+    public function it_should_write_the_key_to_a_file(): void
+    {
+        $filename = $this->getTempPath('testing_an_OpenSSH_key');
+
+        // Save a private key into the disk
+        $originalKey = PrivateKey::generate();
+        $originalKey->toFile($filename);
+
+        // Read the previous saved key
+        $savedKey = PrivateKey::fromFile($filename);
+
+        // Checks that is the same key that we saved
+        $originalText = 'foo bar baz';
+        $cipherText = $originalKey->encrypt($originalText);
+        $this->assertEquals($originalText, $savedKey->decrypt($cipherText));
+    }
+
+    /** @test */
     public function it_should_return_an_string_with_the_content_of_the_key(): void
     {
         $publicKey = PrivateKey::fromFile($this->getStub('privateKey'));
