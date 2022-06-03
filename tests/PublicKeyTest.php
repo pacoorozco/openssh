@@ -12,7 +12,7 @@ class PublicKeyTest extends TestCase
     {
         $this->expectException(NoKeyLoadedException::class);
 
-        new PublicKey('invalid-key');
+        PublicKey::fromString('invalid-key');
     }
 
     /** @test */

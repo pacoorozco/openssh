@@ -11,18 +11,14 @@ class PrivateKey
 {
     const KEY_OUTPUT_FORMAT = 'OpenSSH';
 
-    protected \phpseclib3\Crypt\Common\PrivateKey $key;
+    protected function __construct(
+        protected \phpseclib3\Crypt\Common\PrivateKey $key
+    ) {
+    }
 
-    /**
-     * @throws \PacoOrozco\OpenSSH\Exceptions\NoKeyLoadedException
-     */
-    public function __construct(string $keyContent)
+    public static function generate(int $bits = 2048): self
     {
-        try {
-            $this->key = RSA::loadPrivateKey($keyContent);
-        } catch (\Throwable $exception) {
-            throw new NoKeyLoadedException($exception->getMessage());
-        }
+        return new self(RSA::createKey($bits));
     }
 
     /**
@@ -30,7 +26,13 @@ class PrivateKey
      */
     public static function fromString(string $keyContent): self
     {
-        return new static($keyContent);
+        try {
+            $key = RSA::loadPrivateKey($keyContent);
+        } catch (\Throwable $exception) {
+            throw new NoKeyLoadedException($exception->getMessage());
+        }
+
+        return new self($key);
     }
 
     /**
@@ -43,7 +45,7 @@ class PrivateKey
             throw new FileNotFoundException('The file was not found: ' . $filename);
         }
 
-        return new static($keyContent);
+        return self::fromString($keyContent);
     }
 
     public function encrypt(string $text): string
@@ -81,9 +83,12 @@ class PrivateKey
         return $this->key->sign($text);
     }
 
-    public function getPublicKey(): RSA\PublicKey
+    /**
+     * @throws \PacoOrozco\OpenSSH\Exceptions\NoKeyLoadedException
+     */
+    public function getPublicKey(): PublicKey
     {
-        return $this->key->getPublicKey();
+        return PublicKey::fromString($this->key->getPublicKey());
     }
 
     public function __toString(): string

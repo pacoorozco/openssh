@@ -4,7 +4,7 @@ namespace PacoOrozco\OpenSSH\Tests;
 
 use PacoOrozco\OpenSSH\Exceptions\NoKeyLoadedException;
 use PacoOrozco\OpenSSH\PrivateKey;
-use phpseclib3\Crypt\RSA\PublicKey;
+use PacoOrozco\OpenSSH\PublicKey;
 
 class PrivateKeyTest extends TestCase
 {
@@ -13,7 +13,7 @@ class PrivateKeyTest extends TestCase
     {
         $this->expectException(NoKeyLoadedException::class);
 
-        new PrivateKey('invalid-key');
+        PrivateKey::fromString('invalid-key');
     }
 
     /** @test */
