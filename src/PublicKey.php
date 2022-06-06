@@ -35,8 +35,8 @@ class PublicKey
      */
     public static function fromFile(string $filename): self
     {
-        if (!$keyContent = file_get_contents($filename)) {
-            throw new FileNotFoundException('The file was not found: ' . $filename);
+        if (! $keyContent = file_get_contents($filename)) {
+            throw new FileNotFoundException('The file was not found: '.$filename);
         }
 
         return self::fromString($keyContent);
@@ -60,7 +60,6 @@ class PublicKey
      * on the command line.
      *
      * @param  string  $algorithm
-     *
      * @return string
      */
     public function getFingerPrint(string $algorithm): string

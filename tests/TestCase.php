@@ -6,11 +6,11 @@ class TestCase extends \Orchestra\Testbench\TestCase
 {
     public function getStub(string $nameOfStub): string
     {
-        return __DIR__ . "/stubs/{$nameOfStub}";
+        return __DIR__."/stubs/{$nameOfStub}";
     }
 
     public function getTempPath(string $fileName): string
     {
-        return __DIR__ . "/temp/{$fileName}";
+        return __DIR__."/temp/{$fileName}";
     }
 }

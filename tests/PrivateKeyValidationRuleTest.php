@@ -9,7 +9,6 @@ use PacoOrozco\OpenSSH\Rules\PrivateKeyRule;
 
 class PrivateKeyValidationRuleTest extends TestCase
 {
-
     /** @test */
     public function it_should_pass_when_key_is_private()
     {
