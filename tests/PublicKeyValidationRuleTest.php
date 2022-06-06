@@ -9,7 +9,6 @@ use PacoOrozco\OpenSSH\Rules\PublicKeyRule;
 
 class PublicKeyValidationRuleTest extends TestCase
 {
-
     /** @test */
     public function it_should_pass_when_key_is_public()
     {

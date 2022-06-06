@@ -44,7 +44,7 @@ class PublicKeyTest extends TestCase
     {
         $key = PublicKey::fromFile($this->getStub('publicKey'));
 
-       $this->assertEquals('be:21:c1:98:e9:bf:5c:da:8a:5a:b5:ad:e3:0c:2b:e8', $key->getFingerPrint('md5'));
+        $this->assertEquals('be:21:c1:98:e9:bf:5c:da:8a:5a:b5:ad:e3:0c:2b:e8', $key->getFingerPrint('md5'));
     }
 
     /** @test */

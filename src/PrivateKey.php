@@ -41,8 +41,8 @@ class PrivateKey
      */
     public static function fromFile(string $filename): self
     {
-        if (!$keyContent = file_get_contents($filename)) {
-            throw new FileNotFoundException('The file was not found: ' . $filename);
+        if (! $keyContent = file_get_contents($filename)) {
+            throw new FileNotFoundException('The file was not found: '.$filename);
         }
 
         return self::fromString($keyContent);
@@ -93,7 +93,7 @@ class PrivateKey
 
     public function toFile(string $filename): bool
     {
-        return (false !== file_put_contents($filename, $this));
+        return false !== file_put_contents($filename, $this);
     }
 
     public function __toString(): string
