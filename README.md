@@ -7,26 +7,21 @@
 This package allows you to easily generate OpenSSH private/public key pairs, which can be used as authentication method in SSH connections.
 
 ```php
-use PacoOrozco\OpenSSH\KeyPair;
 use PacoOrozco\OpenSSH\PrivateKey;
 use PacoOrozco\OpenSSH\PublicKey;
 
-// generating an OpenSSH key pair
-[$privateKey, $publicKey] = (new KeyPair())->generate();
+// generating an OpenSSH key
+$privateKey = PrivateKey::generate();
+$publicKey = $privateKey->getPublicKey();
 
-// when passing paths, the generated keys will be written those paths
-(new KeyPair())->generate($pathToPrivateKey, $pathToPublicKey);
-
+// keys can be used to encrypt/decrypt data
 $data = 'my secret data';
 
-$privateKey = PrivateKey::fromFile($pathToPrivateKey);
-$encryptedData = $privateKey->encrypt($data); // returns something unreadable
-
-$publicKey = PublicKey::fromFile($pathToPublicKey);
-$decryptedData = $publicKey->decrypt($encryptedData); // returns 'my secret data'
+$encryptedData = $publicKey->encrypt($data); // returns something unreadable
+$decryptedData = $privateKey->decrypt($encryptedData); // returns 'my secret data'
 ```
 
-Most functions in this package are wrappers around `phpseclib` functions.
+Most functions in this package are wrappers around [phpseclib](https://phpseclib.com) functions.
 
 ## Installation
 
@@ -38,35 +33,44 @@ composer require pacoorozco/openssh
 
 ## Usage
 
-You can generate a key pair using the `generate` function on the `KeyPair` class.
+You can generate a private key using the `generate` function and saving it to a file:
 
 ```php
-use PacoOrozco\OpenSSH\KeyPair;
+use PacoOrozco\OpenSSH\PrivateKey;
 
-[$privateKey, $publicKey] = (new KeyPair())->generate();
-```
-
-You can write the keys to disk, by passing paths to the `generate` function.
-
-```php
-// when passing paths, the generate keys will to those paths
-(new KeyPair())->generate($pathToPrivateKey, $pathToPublicKey)
+$privateKey = PrivateKey::generate();
+$privateKey->toFile('/home/foo/bar');
 ```
 
 ### Loading keys
 
-To load a key from a file use the `fromFile` static method.
+To load a key from a file use the `fromFile` static method:
 
 ```php
-PacoOrozco\OpenSSH\PrivateKey::fromFile($pathToPrivateKey);
-PacoOrozco\OpenSSH\PublicKey::fromFile($pathToPublicKey);
+use PacoOrozco\OpenSSH\PrivateKey;
+use PacoOrozco\OpenSSH\PublicKey;
+
+PrivateKey::fromFile($pathToPrivateKey);
+PublicKey::fromFile($pathToPublicKey);
 ```
 
 Alternatively, you can also create a key object using a string.
 
 ```php
-PacoOrozco\OpenSSH\PrivateKey::fromString($privateKeyString);
-PacoOrozco\OpenSSH\PublicKey::fromString($publicKeyString);
+use PacoOrozco\OpenSSH\PrivateKey;
+use PacoOrozco\OpenSSH\PublicKey;
+
+PrivateKey::fromString($privateKeyContent);
+PublicKey::fromString($publicKeyString);
+```
+
+At any time, you can obtain the public key from a private key
+
+```php
+use PacoOrozco\OpenSSH\PrivateKey;
+
+$privateKey = PrivateKey::fromString($privateKeyContent);
+$publicKey = $privateKey->getPublicKey();
 ```
 
 ### Encrypting a message with a public key, decrypting with the private key
@@ -74,23 +78,28 @@ PacoOrozco\OpenSSH\PublicKey::fromString($publicKeyString);
 Here's how you can encrypt data using the public key, and how to decrypt it using the private key.
 
 ```php
+use PacoOrozco\OpenSSH\PrivateKey;
+use PacoOrozco\OpenSSH\PublicKey;
+
 $data = 'my secret data';
 
-$publicKey = PacoOrozco\OpenSSH\PublicKey::fromFile($pathToPublicKey);
+$publicKey = PublicKey::fromFile($pathToPublicKey);
 $encryptedData = $publicKey->encrypt($data); // encrypted data contains something unreadable
 
-$privateKey = PacoOrozco\OpenSSH\PrivateKey::fromFile($pathToPrivateKey);
+$privateKey = PrivateKey::fromFile($pathToPrivateKey);
 $decryptedData = $privateKey->decrypt($encryptedData); // decrypted data contains 'my secret data'
 ```
 
-If `decrypt` cannot decrypt the given data (maybe a non-matching public key was used to encrypt the data, or maybe tampered with the data), an exception of class `PacoOrozco\OpenSSH\Exceptions\CouldNotDecryptData` will be thrown.
+If `decrypt` cannot decrypt the given data (maybe a non-matching public key was used to encrypt the data, or maybe tampered with the data), an exception of class `\PacoOrozco\OpenSSH\Exceptions\BadDecryptionException` will be thrown.
 
 ### Determining if the data can be decrypted
 
 The `PrivateKey` class has a `canDecrypt` method to determine if given data can be decrypted.
 
 ```php
-PacoOrozco\OpenSSH\PrivateKey::fromFile($pathToPrivateKey)->canDecrypt($data); // returns a boolean;
+use PacoOrozco\OpenSSH\PrivateKey;
+
+PrivateKey::fromFile($pathToPrivateKey)->canDecrypt($data); // returns a boolean;
 ```
 
 ### Signing and verifying data
@@ -100,9 +109,12 @@ The `PrivateKey` class has a method `sign` to generate a signature for the given
 If `verify` returns `true`, you know for certain that the holder of the private key signed the message, and that it was not tampered with.
 
 ```php
-$signature = PacoOrozco\OpenSSH\PrivateKey::fromFile($pathToPrivateKey)->sign('my message'); // returns a string
+use PacoOrozco\OpenSSH\PrivateKey;
+use PacoOrozco\OpenSSH\PublicKey;
 
-$publicKey = PacoOrozco\OpenSSH\PublicKey::fromFile($pathToPublicKey);
+$signature = PrivateKey::fromFile($pathToPrivateKey)->sign('my message'); // returns a string
+
+$publicKey = PublicKey::fromFile($pathToPublicKey);
 
 $publicKey->verify('my message', $signature) // returns true;
 $publicKey->verify('my modified message', $signature) // returns false;

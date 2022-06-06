@@ -2,9 +2,7 @@
 
 namespace PacoOrozco\OpenSSH\Tests;
 
-use PHPUnit\Framework\TestCase as PHPUnitTestCase;
-
-abstract class TestCase extends PHPUnitTestCase
+class TestCase extends \Orchestra\Testbench\TestCase
 {
     public function getStub(string $nameOfStub): string
     {
