@@ -11,6 +11,10 @@ class PublicKeyRule implements Rule
     public function passes($attribute, $value): bool
     {
         try {
+            if (is_null($value)) {
+                return false;
+            }
+
             PublicKey::fromString($value);
         } catch (NoKeyLoadedException) {
             return false;

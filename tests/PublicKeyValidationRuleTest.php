@@ -31,4 +31,15 @@ class PublicKeyValidationRuleTest extends TestCase
 
         $this->assertFalse($validator->passes());
     }
+
+    /** @test */
+    public function it_should_not_pass_when_key_is_null()
+    {
+        $validator = Validator::make(
+            ['key' => null],
+            ['key' => new PublicKeyRule()]
+        );
+
+        $this->assertFalse($validator->passes());
+    }
 }
