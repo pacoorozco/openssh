@@ -13,7 +13,7 @@ class PrivateKeyValidationRuleTest extends TestCase
     public function it_should_pass_when_key_is_private()
     {
         $validator = Validator::make(
-            ['key' => PrivateKey::fromFile($this->getStub('privateKey'))],
+            ['key' => PrivateKey::fromFile($this->getStub('id_rsa'))],
             ['key' => new PrivateKeyRule()]
         );
 
@@ -24,7 +24,7 @@ class PrivateKeyValidationRuleTest extends TestCase
     public function it_should_not_pass_when_key_is_not_private()
     {
         $validator = Validator::make(
-            ['key' => PublicKey::fromFile($this->getStub('publicKey'))],
+            ['key' => PublicKey::fromFile($this->getStub('id_rsa.pub'))],
             ['key' => new PrivateKeyRule()]
         );
 

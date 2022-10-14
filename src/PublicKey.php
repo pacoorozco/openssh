@@ -4,6 +4,7 @@ namespace PacoOrozco\OpenSSH;
 
 use PacoOrozco\OpenSSH\Exceptions\FileNotFoundException;
 use PacoOrozco\OpenSSH\Exceptions\NoKeyLoadedException;
+use phpseclib3\Crypt\PublicKeyLoader;
 use phpseclib3\Crypt\RSA;
 
 class PublicKey
@@ -21,7 +22,7 @@ class PublicKey
     public static function fromString(string $keyContent): self
     {
         try {
-            $key = RSA::loadPublicKey($keyContent);
+            $key = PublicKeyLoader::loadPublicKey($keyContent);
         } catch (\Throwable $exception) {
             throw new NoKeyLoadedException($exception->getMessage());
         }

@@ -20,7 +20,7 @@ namespace PacoOrozco\OpenSSH\Tests;
 use PacoOrozco\OpenSSH\PrivateKey;
 use PacoOrozco\OpenSSH\PublicKey;
 
-class KeyTest extends TestCase
+class RSAKeyTest extends TestCase
 {
     protected PrivateKey $privateKey;
 
@@ -28,13 +28,13 @@ class KeyTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->privateKey = PrivateKey::fromFile($this->getStub('privateKey'));
+        $this->privateKey = PrivateKey::fromFile($this->getStub('id_rsa'));
 
-        $this->publicKey = PublicKey::fromFile($this->getStub('publicKey'));
+        $this->publicKey = PublicKey::fromFile($this->getStub('id_rsa.pub'));
     }
 
     /** @test */
-    public function a_public_key_can_be_used_to_encrypt_a_Data_that_can_be_decrypted_by_a_private_key()
+    public function a_public_key_can_be_used_to_encrypt_data_that_can_be_decrypted_by_a_private_key()
     {
         $originalData = 'secret data';
 

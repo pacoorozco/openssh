@@ -14,7 +14,7 @@ use PacoOrozco\OpenSSH\PublicKey;
 $privateKey = PrivateKey::generate();
 $publicKey = $privateKey->getPublicKey();
 
-// keys can be used to encrypt/decrypt data
+// (only RSA keys) keys can be used to encrypt/decrypt data
 $data = 'my secret data';
 
 $encryptedData = $publicKey->encrypt($data); // returns something unreadable
@@ -73,7 +73,7 @@ $privateKey = PrivateKey::fromString($privateKeyContent);
 $publicKey = $privateKey->getPublicKey();
 ```
 
-### Encrypting a message with a public key, decrypting with the private key
+### [RSA keys only] Encrypting a message with a public key, decrypting with the private key
 
 Here's how you can encrypt data using the public key, and how to decrypt it using the private key.
 
