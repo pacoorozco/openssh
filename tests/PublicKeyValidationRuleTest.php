@@ -15,8 +15,7 @@ class PublicKeyValidationRuleTest extends TestCase
      */
     public function it_should_pass_when_key_is_public(
         string $key,
-    ): void
-    {
+    ): void {
         $validator = Validator::make(
             ['key' => PublicKey::fromFile($this->getStub($key))],
             ['key' => new PublicKeyRule()]

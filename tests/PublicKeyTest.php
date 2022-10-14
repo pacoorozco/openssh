@@ -21,8 +21,7 @@ class PublicKeyTest extends TestCase
      */
     public function it_should_load_a_public_key_from_an_string(
         string $filename,
-    )
-    {
+    ) {
         $key = PublicKey::fromString(file_get_contents($this->getStub($filename)));
 
         $this->assertInstanceOf(PublicKey::class, $key);
@@ -53,8 +52,7 @@ class PublicKeyTest extends TestCase
      */
     public function it_should_load_a_public_key_from_a_file(
         string $filename,
-    ): void
-    {
+    ): void {
         $key = PublicKey::fromFile($this->getStub($filename));
 
         $this->assertInstanceOf(PublicKey::class, $key);
@@ -77,9 +75,8 @@ class PublicKeyTest extends TestCase
      */
     public function it_should_get_the_sha256_fingerprint_of_a_key(
         string $filename,
-        array  $fingerprints,
-    ): void
-    {
+        array $fingerprints,
+    ): void {
         $key = PublicKey::fromFile($this->getStub($filename));
 
         $this->assertEquals($fingerprints['sha256'], $key->getFingerPrint('sha256'));
@@ -91,9 +88,8 @@ class PublicKeyTest extends TestCase
      */
     public function it_should_get_the_md5_fingerprint_of_a_key(
         string $filename,
-        array  $fingerprints,
-    ): void
-    {
+        array $fingerprints,
+    ): void {
         $key = PublicKey::fromFile($this->getStub($filename));
 
         $this->assertEquals($fingerprints['md5'], $key->getFingerPrint('md5'));
