@@ -19,7 +19,7 @@ class PrivateKeyTest extends TestCase
     /** @test */
     public function it_should_load_a_private_key_from_an_string()
     {
-        $key = PrivateKey::fromString(file_get_contents($this->getStub('privateKey')));
+        $key = PrivateKey::fromString(file_get_contents($this->getStub('id_rsa')));
 
         $this->assertInstanceOf(PrivateKey::class, $key);
     }
@@ -27,7 +27,7 @@ class PrivateKeyTest extends TestCase
     /** @test */
     public function it_should_load_a_private_key_from_a_file(): void
     {
-        $key = PrivateKey::fromFile($this->getStub('privateKey'));
+        $key = PrivateKey::fromFile($this->getStub('id_rsa'));
 
         $this->assertInstanceOf(PrivateKey::class, $key);
     }
@@ -35,7 +35,7 @@ class PrivateKeyTest extends TestCase
     /** @test */
     public function it_should_encrypt_and_decrypt_a_text()
     {
-        $key = PrivateKey::fromFile($this->getStub('privateKey'));
+        $key = PrivateKey::fromFile($this->getStub('id_rsa'));
 
         $ciphertext = $key->encrypt('foo bar baz');
 
@@ -47,7 +47,7 @@ class PrivateKeyTest extends TestCase
     /** @test */
     public function it_should_return_the_associated_public_key()
     {
-        $key = PrivateKey::fromFile($this->getStub('privateKey'));
+        $key = PrivateKey::fromFile($this->getStub('id_rsa'));
 
         $this->assertInstanceOf(PublicKey::class, $key->getPublicKey());
     }
@@ -73,7 +73,7 @@ class PrivateKeyTest extends TestCase
     /** @test */
     public function it_should_return_an_string_with_the_content_of_the_key(): void
     {
-        $publicKey = PrivateKey::fromFile($this->getStub('privateKey'));
+        $publicKey = PrivateKey::fromFile($this->getStub('id_rsa'));
 
         $this->assertStringStartsWith('-----BEGIN OPENSSH PRIVATE KEY-----', $publicKey);
     }
