@@ -16,11 +16,11 @@
             "homepage": "https://pacoorozco.info"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
         "php": "^8.0",
-        "illuminate/support": "^8|^9",
+        "illuminate/support": "^8|^9|^10",
         "phpseclib/phpseclib": "^3.0.14"
     },
     "require-dev": {
