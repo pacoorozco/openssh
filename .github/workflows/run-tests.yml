@@ -4,15 +4,13 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-latest]
         php: [8.0, 8.1]
-        dependency-version: [prefer-lowest, prefer-stable]
 
-    name: P${{ matrix.php }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
+    name: PHP ${{ matrix.php }}
 
     steps:
       - name: Checkout code
@@ -24,8 +22,8 @@ jobs:
           php-version: ${{ matrix.php }}
           coverage: none
 
-      - name: Install dependencies
-        run: composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v2
 
       - name: Execute tests
         run: vendor/bin/phpunit
