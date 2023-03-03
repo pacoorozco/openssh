@@ -3,11 +3,21 @@ All notable changes to this package will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## 0.5.0 - 2023-03-03
+### Added
+- Support for [Laravel 10.x](https://laravel.com/docs/10.x).
+
+## 0.4.0 - 2022-10-14
+### Added
+- Support to **ed25519 public keys**. ([#7][i7])
+
+[i7]: https://github.com/pacoorozco/openssh/issues/7
+
 ## 0.3.0 - 2022-06-06
 ### Added
 - `PrivateKey::generate()` creates a new private key. You can obtain the corresponding public key with the `getPublicKey()` method.
 - `toFile()` method to store private and public keys into a file.
-- 
+
 ### Changed
 - `PrivateKey` and `PublicKey` classes use internally `\phpseclib3\Crypt\Common\PrivateKey` and `\phpseclib3\Crypt\Common\PublicKey` interfaces. 
 - `getPublicKey()` returns a `\PacoOrozco\OpenSSH\PublicKey` instead of the `\phpseclib3\Crypt\RSA\PublicKey`. 
