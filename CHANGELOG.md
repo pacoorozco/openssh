@@ -3,6 +3,16 @@ All notable changes to this package will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## 0.5.1 - 2023-10-06
+
+### Changed
+- Bump `phpseclib/phpseclib` from 3.0.14 to 3.0.18
+- [CI] Bump `phpunit/phpunit` from 9.5.0 to 9.6.4
+- [CI] Bump `orchestra/testbench` from 7.0.0 to 7.22.1
+
+### Remove
+- Support for PHP 8.0 version
+
 ## 0.5.0 - 2023-03-03
 ### Added
 - Support for [Laravel 10.x](https://laravel.com/docs/10.x).
