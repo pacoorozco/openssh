@@ -6,9 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and this 
 ## 0.5.1 - 2023-10-06
 
 ### Changed
-- Bump `phpseclib/phpseclib` from 3.0.14 to 3.0.18
-- [CI] Bump `phpunit/phpunit` from 9.5.0 to 9.6.4
-- [CI] Bump `orchestra/testbench` from 7.0.0 to 7.22.1
+- Bump `phpseclib/phpseclib` from 3.0.14 to 3.0.23
+- [CI] Bump `phpunit/phpunit` from 9.5.0 to 9.6.13
+- [CI] Bump `orchestra/testbench` from 7.0.0 to 8.12.2
 
 ### Remove
 - Support for PHP 8.0 version
