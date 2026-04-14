@@ -1,3 +1,9 @@
+# Moved to Codeberg
+
+This repository has been moved to [https://codeberg.org/pakus/openssh](https://codeberg.org/pakus/openssh).
+
+---
+
 # Creating and loading private/public OpenSSH keys
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/pacoorozco/openssh.svg?style=flat-square)](https://packagist.org/packages/spatie/crypto)
